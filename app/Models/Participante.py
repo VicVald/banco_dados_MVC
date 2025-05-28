@@ -1,18 +1,18 @@
-class Member:
-    def __init__(self, id_member, id_user, id_project, funcao, inicio):
-        self._id_member = id_member
+class Participante:
+    def __init__(self, id_user, id_project, funcao, inicio, id_part=None):
+        self._id_part = id_part
         self._id_user = id_user
         self._id_project = id_project
         self._funcao = funcao
         self._data_inicio = inicio
 
     @property
-    def id_member(self):
-        return self._id_member
+    def id_part(self):
+        return self._id_part
 
-    @id_member.setter
-    def id_member(self, value):
-        self._id_member = value
+    @id_part.setter
+    def id_part(self, value):
+        self._id_part = value
 
     @property
     def id_user(self):

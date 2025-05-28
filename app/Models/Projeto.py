@@ -1,5 +1,5 @@
 class Project:
-    def __init__(self, id_project, name, desc):
+    def __init__(self, name, desc, id_project=None):
         self._id_project = id_project
         self._name = name
         self._desc = desc

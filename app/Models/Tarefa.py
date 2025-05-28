@@ -1,7 +1,7 @@
 class Task:
-    def __init__(self, id_task, id_member, id_project, name, desc, state):
+    def __init__(self, id_part, id_project, name, desc, state, id_task=None):
         self._id_task = id_task
-        self._id_member = id_member
+        self._id_part = id_part
         self._id_project = id_project
         self._name = name
         self._desc = desc
@@ -16,12 +16,12 @@ class Task:
         self._id_task = value
 
     @property
-    def id_member(self):
-        return self._id_member
+    def id_part(self):
+        return self._id_part
 
-    @id_member.setter
-    def id_member(self, value):
-        self._id_member = value
+    @id_part.setter
+    def id_part(self, value):
+        self._id_part = value
 
     @property
     def id_project(self):

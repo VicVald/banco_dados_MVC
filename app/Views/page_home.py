@@ -1,1 +1,0 @@
-# Permite procurar projetos e criar novos projetos

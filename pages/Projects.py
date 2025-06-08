@@ -1,12 +1,12 @@
 import streamlit as st
-from utils import get_all_projects, delete_project
+from app.Views.utils import get_all_projects, delete_project
 
 st.set_page_config(page_title="Projetos", layout="wide")
 
 # Verificar se o usuário está logado
 if 'user' not in st.session_state:
     st.warning("Por favor, faça login para ver seus projetos.")
-    st.switch_page("Login")
+    st.info('Use o menu lateral para navegar entre as páginas.')
 
 st.title("Meus Projetos")
 
@@ -15,7 +15,7 @@ search_query = st.text_input("🔍 Pesquisar projetos", "")
 
 # Botão para criar novo projeto
 if st.button("➕ Criar Novo Projeto"):
-    st.switch_page("CreateProject")
+    st.info('Use o menu lateral para navegar entre as páginas.')
 
 # Buscar projetos
 try:
@@ -56,4 +56,4 @@ except Exception as e:
 
 # Botão para voltar à página inicial
 if st.button("Voltar para Home"):
-    st.switch_page("Home") 
+    st.info('Use o menu lateral para navegar entre as páginas.') 

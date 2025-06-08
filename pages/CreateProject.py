@@ -1,12 +1,12 @@
 import streamlit as st
-from utils import create_project
+from app.Views.utils import create_project
 
 st.set_page_config(page_title="Criar Projeto", layout="wide")
 
 # Verificar se o usuário está logado
 if 'user' not in st.session_state:
     st.warning("Por favor, faça login para criar um projeto.")
-    st.switch_page("Login")
+    st.info('Use o menu lateral para navegar entre as páginas.')
 
 st.title("Criar Novo Projeto")
 
@@ -40,4 +40,4 @@ with st.form("create_project_form"):
 
 # Botão para voltar à página de projetos
 if st.button("Voltar para Projetos"):
-    st.switch_page("Projects") 
+    st.info('Use o menu lateral para navegar entre as páginas.') 

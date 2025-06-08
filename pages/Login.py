@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import login_user, register_user
+from app.Views.utils import login_user, register_user
 
 st.set_page_config(page_title="Login/Registro", layout="wide")
 
@@ -20,7 +20,7 @@ with col1:
             if user:
                 st.session_state['user'] = user
                 st.success("Login realizado com sucesso!")
-                st.switch_page("Projects")
+                st.info('Use o menu lateral para navegar entre as páginas.')
             else:
                 st.error("Email ou senha inválidos")
 
@@ -45,4 +45,4 @@ with col2:
 
 # Botão para voltar à página inicial
 if st.button("Voltar para Home"):
-    st.switch_page("Home") 
+    st.info('Use o menu lateral para navegar entre as páginas.') 

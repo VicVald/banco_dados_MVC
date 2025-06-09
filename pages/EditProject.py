@@ -1,6 +1,8 @@
 import streamlit as st
-from app.Views.utils import get_project_by_id, update_project, get_project_participants, getUsers, includeParticipante, get_all_projects, logout
+from app.Views.utils import get_project_by_id, update_project, get_project_participants, getUsers, includeParticipante, get_all_projects, logout, get_project_tasks
 from app.Controllers.ParticipanteController import deleteParticipante
+from app.Controllers.TarefaController import updateTask, deleteTask
+from app.Models.Tarefa import Task
 
 st.set_page_config(page_title="Editar Projeto", layout="wide")
 
@@ -105,6 +107,41 @@ if user_options:
         st.rerun()
 else:
     st.info("Não há outros usuários disponíveis para adicionar.")
+
+# Seção de Tarefas
+st.markdown("---")
+st.subheader("Tarefas do Projeto")
+tasks = get_project_tasks(project.id_project)
+
+if tasks:
+    for task in tasks:
+        with st.expander(f"{task.name} - {task.state}"):
+            with st.form(f"edit_task_form_{task.id_task}"):
+                task_name = st.text_input("Nome da Tarefa", value=task.name, key=f"name_{task.id_task}")
+                task_description = st.text_area("Descrição", value=task.desc, key=f"desc_{task.id_task}")
+                task_state = st.selectbox(
+                    "Estado",
+                    ["Não Iniciado", "Em Andamento", "Concluído", "Em Pausa"],
+                    index=["Não Iniciado", "Em Andamento", "Concluído", "Em Pausa"].index(task.state) if task.state in ["Não Iniciado", "Em Andamento", "Concluído", "Em Pausa"] else 0,
+                    key=f"state_{task.id_task}"
+                )
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.form_submit_button("Salvar Alterações"):
+                        task.name = task_name
+                        task.desc = task_description
+                        task.state = task_state
+                        updateTask(task)
+                        st.success("Tarefa atualizada com sucesso!")
+                        st.rerun()
+                with col2:
+                    if st.form_submit_button("Excluir Tarefa"):
+                        deleteTask(task.id_task)
+                        st.success("Tarefa excluída com sucesso!")
+                        st.rerun()
+else:
+    st.info("Nenhuma tarefa criada para este projeto.")
 
 if st.button("Logout"):
     logout() 

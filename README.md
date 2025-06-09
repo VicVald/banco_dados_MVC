@@ -9,10 +9,26 @@ Este projeto é um sistema de gerenciamento de projetos inspirado no Trello, uti
 ## Funcionalidades Principais
 
 - **Interface Web com Streamlit**: Interação visual para login, cadastro, gerenciamento de projetos, tarefas e participantes.
-- **Gestão de Usuários**: Registro, login, logout e exclusão de conta.
-- **Gestão de Projetos**: Criação, edição, exclusão e visualização detalhada de projetos.
-- **Gestão de Participantes**: Atribuição e remoção de participantes em projetos, com função e data de início.
-- **Gestão de Tarefas**: Listagem de tarefas por projeto (criação de tarefas em construção).
+- **Gestão de Usuários**: 
+  - Registro e login de usuários
+  - Exclusão de conta
+  - Sistema de autenticação seguro
+- **Gestão de Projetos**: 
+  - Criação de projetos com nome, descrição, status e datas
+  - Edição completa de projetos
+  - Exclusão de projetos
+  - Visualização detalhada de projetos
+  - Pesquisa de projetos por nome
+- **Gestão de Participantes**: 
+  - Atribuição de participantes com função e data de início
+  - Remoção de participantes
+  - Visualização de equipe por projeto
+- **Gestão de Tarefas**: 
+  - Criação de tarefas com nome, descrição e estado
+  - Edição de tarefas existentes
+  - Exclusão de tarefas
+  - Visualização de tarefas por projeto
+  - Estados: Não Iniciado, Em Andamento, Concluído, Em Pausa
 - **Banco de Dados SQLite**: Scripts para criação, limpeza e manipulação das tabelas.
 
 ---
@@ -65,6 +81,11 @@ Este projeto é um sistema de gerenciamento de projetos inspirado no Trello, uti
 - **A principal evolução foi a criação de uma interface web moderna e funcional com Streamlit**, tornando o sistema utilizável por qualquer usuário via navegador.
 - Foram implementadas funcionalidades completas de autenticação, CRUD de projetos, gerenciamento de participantes e visualização de tarefas.
 - O código foi modularizado e organizado para facilitar manutenção e expansão futura.
+- Adicionado sistema de pesquisa de projetos
+- Implementado gerenciamento completo de tarefas (CRUD)
+- Melhorias na interface do usuário com feedback visual para ações
+- Sistema de navegação intuitivo entre páginas
+- Gerenciamento de estado da sessão do usuário
 
 ---
 

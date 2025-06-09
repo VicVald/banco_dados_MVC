@@ -32,7 +32,18 @@ project = st.session_state['current_project']
 # Título e informações básicas
 st.title(f"Detalhes do Projeto: {project.name}")
 
-# Layout em colunas para informações principaisimage.png
+# Verificar parâmetros de URL para mensagens de feedback
+if 'message' in st.query_params and 'type' in st.query_params:
+    message = st.query_params['message']
+    message_type = st.query_params['type']
+    if message_type == 'success':
+        st.success(message)
+    elif message_type == 'error':
+        st.error(message)
+    # Limpar os parâmetros da URL
+    st.query_params.clear()
+
+# Layout em colunas para informações principais
 col1, col2 = st.columns(2)
 
 with col1:
@@ -64,24 +75,35 @@ with col2:
     participants = get_project_participants(project.id_project)
     ids_participantes = [p.id_user for p in participants]
     user_options = {f"{u.name} ({u.email})": u.id_user for u in users if u.id_user != st.session_state['user'].id_user and u.id_user not in ids_participantes}
+    
     if user_options:
         with st.form("add_participant_form"):
             selected_user = st.selectbox("Selecione o usuário", list(user_options.keys()))
             funcao = st.text_input("Função no projeto")
             data_inicio = st.date_input("Data de início")
             add_participant = st.form_submit_button("Adicionar Participante")
+            
             if add_participant:
-                from app.Models.Participante import Participante
-                novo_participante = Participante(
-                    id_user=user_options[selected_user],
-                    id_project=project.id_project,
-                    funcao=funcao,
-                    inicio=str(data_inicio)
-                )
-                from app.Views.utils import includeParticipante
-                includeParticipante(novo_participante)
-                st.success(f"Participante {selected_user} adicionado!")
-                st.rerun()
+                if not funcao:
+                    st.error("A função do participante é obrigatória!")
+                else:
+                    from app.Models.Participante import Participante
+                    novo_participante = Participante(
+                        id_user=user_options[selected_user],
+                        id_project=project.id_project,
+                        funcao=funcao,
+                        inicio=str(data_inicio)
+                    )
+                    from app.Views.utils import includeParticipante
+                    resultado = includeParticipante(novo_participante)
+                    
+                    if resultado is None:
+                        st.query_params["message"] = "Este usuário já é participante do projeto!"
+                        st.query_params["type"] = "error"
+                    else:
+                        st.query_params["message"] = f"Participante {selected_user} adicionado com sucesso!"
+                        st.query_params["type"] = "success"
+                    st.switch_page("pages/ProjectDetail.py")
     else:
         st.info("Não há outros usuários disponíveis para adicionar.")
 

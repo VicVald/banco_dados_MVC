@@ -9,6 +9,12 @@ def includeParticipante(participante):
     conexao = conectBD()
     cursor = conexao.cursor()
     try:
+        # Verificar se o participante já existe
+        cursor.execute('SELECT * FROM part WHERE id_user = ? AND id_project = ?', 
+                      (participante.id_user, participante.id_project))
+        if cursor.fetchone():
+            return None  # Participante já existe
+        
         cursor.execute("""
             INSERT INTO part (id_user, id_project, funcao, data_inicio)
             VALUES (?, ?, ?, ?)
@@ -23,6 +29,7 @@ def includeParticipante(participante):
         return participante
     except sqlite3.Error as e:
         print(f"Erro ao inserir participante: {e}")
+        return None
 
 def getParticipantes():
     conexao = conectBD()

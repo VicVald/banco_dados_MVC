@@ -12,7 +12,7 @@ cursor.execute('''
         funcao TEXT NOT NULL,
         data_inicio TIMESTAMP,
         FOREIGN KEY (id_user) REFERENCES user (id_user),
-        FOREIGN KEY (id_project) REFERENCES project (id_project)
+        FOREIGN KEY (id_project) REFERENCES project (id_project) ON DELETE CASCADE
     )
 ''')
 

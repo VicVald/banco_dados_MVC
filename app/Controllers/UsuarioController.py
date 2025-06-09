@@ -10,11 +10,12 @@ def includeUser(user):
     cursor = conexao.cursor()
     try:
         cursor.execute("""
-            INSERT INTO user (name, email)
-            VALUES (?, ?)
+            INSERT INTO user (name, email, password)
+            VALUES (?, ?, ?)
         """, (
             user.name,
-            user.email
+            user.email,
+            user.password
         ))
         conexao.commit()
         user.id_user = cursor.lastrowid
@@ -25,14 +26,15 @@ def includeUser(user):
 def getUsers():
     conexao = conectBD()
     cursor = conexao.cursor()
+    users = []
     try:
         cursor.execute('SELECT * FROM user')
         rows = cursor.fetchall()
-        users = []
         for row in rows:
             users.append(User(
                 name=row[1],
                 email=row[2],
+                password=row[3] if len(row) > 3 else None,
                 id_user=row[0]
             ))
         return users
@@ -45,11 +47,12 @@ def updateUser(user):
     try:
         cursor.execute("""
             UPDATE user
-            SET name = ?, email = ?
+            SET name = ?, email = ?, password = ?
             WHERE id_user = ?
         """, (
             user.name,
             user.email,
+            user.password,
             user.id_user
         ))
         conexao.commit()
@@ -66,6 +69,7 @@ def getUserById(id_user):
             return User(
                 name=row[1],
                 email=row[2],
+                password=row[3] if len(row) > 3 else None,
                 id_user=row[0]
             )
         return None
@@ -82,6 +86,7 @@ def getUserByEmail(email):
             return User(
                 name=row[1],
                 email=row[2],
+                password=row[3] if len(row) > 3 else None,
                 id_user=row[0]
             )
         return None

@@ -1,9 +1,14 @@
 import streamlit as st
-from app.Views.utils import login_user, register_user
+from app.Views.utils import login_user, register_user, delete_user
 
 st.set_page_config(page_title="Login/Registro", layout="wide")
 
 st.title("Login / Registro")
+
+# Bloquear acesso à tela de login se já estiver logado
+if 'user' in st.session_state and st.session_state['user'] is not None:
+    st.switch_page("pages/Projects.py")
+    st.stop()
 
 # Criar duas colunas para login e registro
 col1, col2 = st.columns(2)
@@ -23,6 +28,15 @@ with col1:
                 st.info('Use o menu lateral para navegar entre as páginas.')
             else:
                 st.error("Email ou senha inválidos")
+    # Se o usuário estiver logado, permitir exclusão
+    if 'user' in st.session_state and st.session_state['user'] is not None:
+        st.markdown("---")
+        st.warning(f"Excluir usuário: {st.session_state['user'].name} ({st.session_state['user'].email})")
+        if st.button("Excluir minha conta", type="primary"):
+            delete_user(st.session_state['user'].id_user)
+            st.success("Usuário excluído com sucesso!")
+            del st.session_state['user']
+            st.rerun()
 
 with col2:
     st.header("Registro")
@@ -43,6 +57,7 @@ with col2:
                 else:
                     st.error("Email já cadastrado")
 
-# Botão para voltar à página inicial
-if st.button("Voltar para Home"):
-    st.info('Use o menu lateral para navegar entre as páginas.') 
+def logout():
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.switch_page("pages/Login.py")

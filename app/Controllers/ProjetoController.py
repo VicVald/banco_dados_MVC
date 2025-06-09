@@ -10,11 +10,15 @@ def includeProject(project):
     cursor = conexao.cursor()
     try:
         cursor.execute("""
-            INSERT INTO project (name, desc)
-            VALUES (?, ?)
+            INSERT INTO project (name, desc, status, start_date, end_date, owner_id)
+            VALUES (?, ?, ?, ?, ?, ?)
         """, (
             project.name,
-            project.desc
+            project.desc,
+            project.status,
+            project.start_date,
+            project.end_date,
+            project.owner_id
         ))
         conexao.commit()
         project.id_project = cursor.lastrowid
@@ -30,10 +34,15 @@ def getProjects():
         rows = cursor.fetchall()
         projects = []
         for row in rows:
+            owner_id = row[6] if len(row) > 6 else None
             projects.append(Project(
                 name=row[1],
                 desc=row[2],
-                id_project=row[0]
+                status=row[3],
+                start_date=row[4],
+                end_date=row[5],
+                id_project=row[0],
+                owner_id=owner_id
             ))
         return projects
     except sqlite3.Error as e:
@@ -45,11 +54,14 @@ def updateProject(project):
     try:
         cursor.execute("""
             UPDATE project
-            SET name = ?, desc = ?
+            SET name = ?, desc = ?, status = ?, start_date = ?, end_date = ?
             WHERE id_project = ?
         """, (
             project.name,
             project.desc,
+            project.status,
+            project.start_date,
+            project.end_date,
             project.id_project
         ))
         conexao.commit()
@@ -66,6 +78,9 @@ def getProjectById(id_project):
             return Project(
                 name=row[1],
                 desc=row[2],
+                status=row[3],
+                start_date=row[4],
+                end_date=row[5],
                 id_project=row[0]
             )
         return None
@@ -78,13 +93,15 @@ def deleteProject(id_project):
     try:
         cursor.execute('DELETE FROM project WHERE id_project = ?', (id_project,))
         conexao.commit()
+        return True
     except sqlite3.Error as e:
         print(f"Erro ao deletar projeto: {e}")
+        return False
 
 if __name__ == "__main__":
     # Teste de inclusão
     print("\nTeste de inclusão de projeto:")
-    novo_projeto = Project("Projeto Teste", "Descrição do projeto teste")
+    novo_projeto = Project("Projeto Teste", "Descrição do projeto teste", "Em Andamento", "2024-01-01", "2024-12-31")
     projeto_inserido = includeProject(novo_projeto)
     print(f"Projeto inserido: {projeto_inserido.name} - {projeto_inserido.desc}")
 
@@ -97,6 +114,9 @@ if __name__ == "__main__":
     print("\nTeste de atualização:")
     projeto.name = "Projeto Teste Atualizado"
     projeto.desc = "Nova descrição do projeto"
+    projeto.status = "Concluído"
+    projeto.start_date = "2024-01-01"
+    projeto.end_date = "2024-12-31"
     updateProject(projeto)
     projeto_atualizado = getProjectById(projeto.id_project)
     print(f"Projeto atualizado: {projeto_atualizado.name} - {projeto_atualizado.desc}")

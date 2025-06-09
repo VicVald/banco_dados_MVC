@@ -1,5 +1,5 @@
-streamlit
+streamlit>=1.20.0
 requests
 python-dateutil
 typing-extensions
-utils
+# utils (remover se não for um pacote PyPI)

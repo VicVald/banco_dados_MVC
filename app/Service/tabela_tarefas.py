@@ -13,8 +13,8 @@ cursor.execute(
         name TEXT NOT NULL,
         desc TEXT NOT NULL,
         state TEXT NOT NULL,
-        FOREIGN KEY (id_part) REFERENCES part (id_part),
-        FOREIGN KEY (id_project) REFERENCES project (id_project)
+        FOREIGN KEY (id_part) REFERENCES part (id_part) ON DELETE CASCADE,
+        FOREIGN KEY (id_project) REFERENCES project (id_project) ON DELETE CASCADE
 )
     '''
 )

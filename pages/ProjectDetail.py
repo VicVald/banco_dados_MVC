@@ -1,5 +1,6 @@
 import streamlit as st
 from app.Views.utils import get_project_by_id, get_project_tasks, get_project_participants, getUsers, get_all_projects, logout
+from app.Controllers.ParticipanteController import getParticipanteById
 
 # Carregar todos os usuários uma única vez para uso global
 users = getUsers()
@@ -115,8 +116,14 @@ try:
         for task in tasks:
             with st.expander(f"{task.name} - {task.state}"):
                 st.markdown(f"**Descrição:** {task.desc}")
-                if hasattr(task, 'assigned_to'):
-                    st.markdown(f"**Atribuído a:** {task.assigned_to}")
+                # Buscar responsável pela task
+                participante = getParticipanteById(task.id_part) if task.id_part else None
+                if participante:
+                    user = user_dict.get(int(participante.id_user))
+                    nome = user.name if user else f"Usuário {participante.id_user} (não encontrado)"
+                    st.markdown(f"**Responsável:** {nome}")
+                else:
+                    st.markdown("**Responsável:** Não definido")
     else:
         st.info("Nenhuma tarefa criada para este projeto.")
 except Exception as e:

@@ -1,8 +1,9 @@
 import sqlite3
 from Models.Tarefa import Task
+from app.Service.database import get_connection
 
 def conectBD():
-    conexao = sqlite3.connect("Trello.db")
+    conexao = get_connection()
     return conexao
 
 def includeTask(task):

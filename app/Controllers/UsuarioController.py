@@ -1,11 +1,19 @@
 import sqlite3
+import re
 from Models.Usuario import User
+from app.Service.database import get_connection
+
+def is_valid_email(email):
+    return re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email) is not None
 
 def conectBD():
-    conexao = sqlite3.connect("Trello.db")
+    conexao = get_connection()
     return conexao
 
 def includeUser(user):
+    if not is_valid_email(user.email):
+        print("Email inválido. Cadastro não realizado.")
+        return None
     conexao = conectBD()
     cursor = conexao.cursor()
     try:
@@ -42,6 +50,9 @@ def getUsers():
         print(f"Erro ao consultar usuários: {e}")
 
 def updateUser(user):
+    if not is_valid_email(user.email):
+        print("Email inválido. Atualização não realizada.")
+        return None
     conexao = conectBD()
     cursor = conexao.cursor()
     try:

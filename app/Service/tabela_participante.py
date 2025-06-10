@@ -1,6 +1,7 @@
 import sqlite3
+from app.Service.database import get_db_path
 
-conexao = sqlite3.connect("Trello.db")
+conexao = sqlite3.connect(get_db_path())
 
 cursor = conexao.cursor()
 

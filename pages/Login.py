@@ -51,11 +51,11 @@ with col2:
             if password != confirm_password:
                 st.error("As senhas não coincidem")
             else:
-                user = register_user(name, email, password)
+                user, error = register_user(name, email, password)
                 if user:
                     st.success("Registro realizado com sucesso! Faça login para continuar.")
                 else:
-                    st.error("Email já cadastrado")
+                    st.error(error or "Email já cadastrado")
 
 def logout():
     for key in list(st.session_state.keys()):

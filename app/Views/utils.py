@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Controllers.UsuarioController import (
     includeUser, getUsers, getUserById, getUserByEmail,
-    updateUser, deleteUser, searchUsersByName
+    updateUser, deleteUser, searchUsersByName, is_valid_email
 )
 from Controllers.ProjetoController import (
     includeProject, getProjects, getProjectById, deleteProject, updateProject
@@ -34,9 +34,14 @@ def login_user(email, password):
 def register_user(name, email, password):
     # Verificar se usuário já existe
     if getUserByEmail(email):
-        return None
+        return None, 'Usuário já existe.'
+    if not is_valid_email(email):
+        return None, 'Email inválido.'
     new_user = User(name, email, password)
-    return includeUser(new_user)
+    result = includeUser(new_user)
+    if result is None:
+        return None, 'Erro ao cadastrar usuário.'
+    return result, None
 
 def delete_user(id_user):
     return deleteUser(id_user)
@@ -85,11 +90,11 @@ def get_project_tasks(project_id):
         return []
     return getTasksByProject(project_id)
 
-def create_task(project_id, name, description, state):
+def create_task(project_id, name, description, state, id_part):
     projetos_usuario = [p.id_project for p in get_all_projects()]
     if project_id not in projetos_usuario:
         return None
-    task = Task(None, project_id, name, description, state)
+    task = Task(id_part, project_id, name, description, state)
     return includeTask(task)
 
 def update_project(project):

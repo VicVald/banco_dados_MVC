@@ -1,6 +1,6 @@
 import streamlit as st
 from app.Views.utils import get_project_by_id, update_project, get_project_participants, getUsers, includeParticipante, get_all_projects, logout, get_project_tasks
-from app.Controllers.ParticipanteController import deleteParticipante
+from app.Controllers.ParticipanteController import deleteParticipante, getParticipantesByProject
 from app.Controllers.TarefaController import updateTask, deleteTask
 from app.Models.Tarefa import Task
 
@@ -125,13 +125,20 @@ if tasks:
                     index=["Não Iniciado", "Em Andamento", "Concluído", "Em Pausa"].index(task.state) if task.state in ["Não Iniciado", "Em Andamento", "Concluído", "Em Pausa"] else 0,
                     key=f"state_{task.id_task}"
                 )
-                
+                # Campo para selecionar responsável
+                participantes = getParticipantesByProject(project.id_project)
+                part_options = {f"{user_dict.get(p.id_user).name if user_dict.get(p.id_user) else 'Usuário '+str(p.id_user)} ({p.funcao})": p.id_part for p in participantes}
+                current_part = task.id_part if task.id_part in part_options.values() else None
+                selected_part = st.selectbox("Responsável pela Tarefa", list(part_options.keys()),
+                                            index=list(part_options.values()).index(current_part) if current_part else 0,
+                                            key=f"part_{task.id_task}")
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.form_submit_button("Salvar Alterações"):
                         task.name = task_name
                         task.desc = task_description
                         task.state = task_state
+                        task.id_part = part_options[selected_part]
                         updateTask(task)
                         st.success("Tarefa atualizada com sucesso!")
                         st.rerun()
